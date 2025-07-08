@@ -12,6 +12,7 @@ import useAuthUser from "./hooks/useAuthUser"
 import Layout from "./components/Layout"
 import { useState } from "react"
 import { useThemeStore } from "./store/useThemeStore"
+import FriendsPage from "./pages/FriendPage"
 
 
 
@@ -45,7 +46,7 @@ const App = () => {
           <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
         )} />
         <Route path="/call/:id" element={isAuthenticated && isOnboarded ? (
-            <CallPage />
+          <CallPage />
         ) : (
           <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
         )} />
@@ -56,6 +57,14 @@ const App = () => {
         ) : (
           <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
         )} />
+        <Route path="/friends" element={isAuthenticated && isOnboarded ? (
+          <Layout showSidebar={true}>
+            <FriendsPage />
+          </Layout>
+        ) : (
+          <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+        )} />
+
         <Route path="/onboarding" element={isAuthenticated ? (!isOnboarded ? (<OnboardingPage />) : (<Navigate to="/" />)) : (
           <Navigate to="/login" />
         )} />

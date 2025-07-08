@@ -1,21 +1,34 @@
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { acceptFriendRequest, getFriendRequests } from "../lib/api";
 import { BellIcon, ClockIcon, MessageSquareIcon, UserCheckIcon } from "lucide-react";
 import NoNotificationsFound from "../components/NoNotificationsFound";
+import { useState } from "react";
+import { useThemeStore } from "../store/useThemeStore";
+import toast from "react-hot-toast";
 
 const NotificationsPage = () => {
+  const { theme } = useThemeStore();
   const queryClient = useQueryClient();
+  const [loadingUserId, setLoadingUserId] = useState(null);
 
   const { data: friendRequests, isLoading } = useQuery({
     queryKey: ["friendRequests"],
     queryFn: getFriendRequests,
   });
 
-  const { mutate: acceptRequestMutation, isPending } = useMutation({
+  const { mutate: acceptRequestMutation } = useMutation({
     mutationFn: acceptFriendRequest,
+    onMutate: (userId) => {
+      setLoadingUserId(userId);
+    },
     onSuccess: () => {
+        toast.success("Friend request accepted!");
       queryClient.invalidateQueries({ queryKey: ["friendRequests"] });
       queryClient.invalidateQueries({ queryKey: ["friends"] });
+    },
+    onSettled: () => {
+      setLoadingUserId(null);
     },
   });
 
@@ -23,7 +36,7 @@ const NotificationsPage = () => {
   const acceptedRequests = friendRequests?.acceptedReqs || [];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8" data-theme={theme}>
       <div className="container mx-auto max-w-4xl space-y-8">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-6">Notifications</h1>
 
@@ -69,9 +82,13 @@ const NotificationsPage = () => {
                           <button
                             className="btn btn-primary btn-sm"
                             onClick={() => acceptRequestMutation(request._id)}
-                            disabled={isPending}
+                            disabled={loadingUserId === request._id}
                           >
-                            Accept
+                            {loadingUserId === request._id ? (
+                              <span className="loading loading-spinner loading-sm"></span>
+                            ) : (
+                              "Accept"
+                            )}
                           </button>
                         </div>
                       </div>
@@ -81,7 +98,7 @@ const NotificationsPage = () => {
               </section>
             )}
 
-            {/* ACCEPTED REQS NOTIFICATONS */}
+            {/* ACCEPTED REQS NOTIFICATIONS */}
             {acceptedRequests.length > 0 && (
               <section className="space-y-4">
                 <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -131,4 +148,6 @@ const NotificationsPage = () => {
     </div>
   );
 };
+
 export default NotificationsPage;
+

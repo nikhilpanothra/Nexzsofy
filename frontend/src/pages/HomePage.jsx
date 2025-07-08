@@ -1,3 +1,4 @@
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
@@ -17,7 +18,7 @@ import NoFriendsFound from "../components/NoFriendFound";
 import toast from "react-hot-toast";
 
 const HomePage = () => {
-    const {theme}=useThemeStore();
+  const { theme } = useThemeStore();
   const queryClient = useQueryClient();
   const [outgoingRequestsIds, setOutgoingRequestsIds] = useState(new Set());
   const [loadingUserId, setLoadingUserId] = useState(null);
@@ -65,7 +66,7 @@ const HomePage = () => {
     <div className="p-4 sm:p-6 lg:p-8" data-theme={theme}>
       <div className="container mx-auto space-y-10">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Your Friends</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Your Top Friends</h2>
           <Link to="/notifications" className="btn btn-outline btn-sm">
             <UsersIcon className="mr-2 size-4" />
             Friend Requests
@@ -79,11 +80,18 @@ const HomePage = () => {
         ) : friends.length === 0 ? (
           <NoFriendsFound />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {friends.map((friend) => (
-              <FriendCard key={friend._id} friend={friend} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {friends.slice(0, 4).map((friend) => (
+                <FriendCard key={friend._id} friend={friend} />
+              ))}
+            </div>
+            <div className="text-center mt-4">
+              <Link to="/friends" className="btn btn-outline btn-sm">
+                See All Friends
+              </Link>
+            </div>
+          </>
         )}
 
         <section>
@@ -137,7 +145,6 @@ const HomePage = () => {
                         </div>
                       </div>
 
-                      {/* Languages with flags */}
                       <div className="flex flex-wrap gap-1.5">
                         <span className="badge badge-secondary">
                           {getLanguageFlag(user.nativeLanguage)}
@@ -151,7 +158,6 @@ const HomePage = () => {
 
                       {user.bio && <p className="text-sm opacity-70">{user.bio}</p>}
 
-                      {/* Action button */}
                       <button
                         className={`btn w-full mt-2 ${
                           hasRequestBeenSent || isLoading ? "btn-disabled" : "btn-primary"

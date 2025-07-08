@@ -49,7 +49,7 @@ const OnboardingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-base-100 flex items-center justify-center p-4" data-theme="forest">
       <div className="card bg-base-200 w-full max-w-xl shadow-xl">
        <div className="card-body p-6">
          <h1 className="text-xl sm:text-3xl font-bold text-center mb-2">Complete Your Profile</h1>
