@@ -20,8 +20,8 @@ export async function signup(req, res) {
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         }
-        const idx = Math.floor(Math.random() * 1000); // or use uuid, timestamp, etc.
-        const randomAvatar = `https://api.dicebear.com/7.x/notionists/png?seed=${idx}`;
+        const idx = Math.floor(Math.random() * 100) + 1; // or use uuid, timestamp, etc.
+        const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
 
         const newUser = await User.create({
             email,
