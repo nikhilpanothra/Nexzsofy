@@ -3,7 +3,6 @@ import { useParams } from "react-router";
 import useAuthUser from "../hooks/useAuthUser";
 import { useQuery } from "@tanstack/react-query";
 import { getStreamToken } from "../lib/api";
-import { useThemeStore } from '../store/useThemeStore'
 
 import {
   Channel,
@@ -23,7 +22,6 @@ import CallButton from "../components/CallButton";
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 
 const ChatPage = () => {
-   const {theme}=useThemeStore();
   const { id: targetUserId } = useParams();
 
   const [chatClient, setChatClient] = useState(null);
@@ -97,7 +95,7 @@ const ChatPage = () => {
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
   return (
-    <div className="h-[89vh] overflow-hidden" data-theme={theme}>
+    <div className="h-[89vh]">
       <Chat client={chatClient}>
         <Channel channel={channel}>
           <div className="w-full relative">
